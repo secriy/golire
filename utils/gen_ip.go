@@ -12,7 +12,7 @@ func GenerateIPPool(cidr string) ([]string, error) {
 	for ip := ip.Mask(ipNet.Mask); ipNet.Contains(ip); incr(ip) {
 		pool = append(pool, ip.String())
 	}
-	return pool[1 : len(pool)-1], nil
+	return pool[1:], nil
 }
 
 // incr increase the ip address by one.
