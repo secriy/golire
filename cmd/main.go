@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ips     = flag.String("i", "127.0.0.1", "CIDR, like '192.168.1.0/24'")
+	ips     = flag.String("i", "127.0.0.1/24", "CIDR, like '192.168.1.0/24'")
 	ports   = flag.String("p", "22,3389", "All legal ports, like '1-28', '22,53,3389' and '22,49-80'.")
 	timeout = flag.Int("t", 2000, "Scan timeout for one task, set 2 seconds by default.")
 )
