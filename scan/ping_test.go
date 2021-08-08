@@ -1,7 +1,12 @@
 package scan
 
-import "testing"
+import (
+	"log"
+	"testing"
+)
 
 func TestPingToScan(t *testing.T) {
-	PingToScan()
+	if MustPing("127.0.0.1") {
+		log.Println("YES")
+	}
 }

@@ -1,15 +1,16 @@
 package scan
 
 import (
+	"log"
 	"testing"
+	"time"
 )
 
-func TestGetAllTcpOpenPorts(t *testing.T) {
-	ports := make([]uint16, 0)
-	for i := 1; i < 3000; i++ {
-		ports = append(ports, uint16(i))
+func TestScan_TCP(t *testing.T) {
+	sc := NewScan("127.0.0.1", 22, time.Millisecond*200)
+	if sc.TCP() {
+		log.Println("YES")
+	} else {
+		log.Println("NO")
 	}
-	scan := NewScan("172.22.22.239", &ports, 3000)
-	res := scan.GetAllTcpOpenPorts()
-	t.Log(res)
 }
