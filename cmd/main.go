@@ -3,38 +3,31 @@ package main
 import (
 	"flag"
 	"fmt"
-	"sync"
+	"os"
+	"time"
 
-	"github.com/secriy/golire/scan"
+	"github.com/secriy/golire"
 )
 
 var (
-	ips     = flag.String("i", "127.0.0.1/24", "CIDR, like '192.168.1.0/24'")
-	ports   = flag.String("p", "22,3389", "All legal ports, like '1-28', '22,53,3389' and '22,49-80'.")
-	timeout = flag.Int("t", 2000, "Scan timeout for one task, set 2 seconds by default.")
+	ips     = flag.String("h", "127.0.0.1/24", "Host, which represent by CIDR, like '192.168.1.0/24'")
+	ports   = flag.String("p", "22,3389", "Port range, like '1-28', '22,53,3389' and '22,49-80'.")
+	timeout = flag.Int("t", 200, "Timeout for one scan task, the default is 200 milliseconds.")
+	number  = flag.Int("n", 300, "The number of goroutines to be created.")
 )
 
 func main() {
 	flag.Parse()
-	tasks := scan.NewTasks(*ips, *ports)
-	wg := &sync.WaitGroup{}
-	results := make([]string, len(tasks.IPPool))
-	for k, v := range tasks.IPPool {
-		wg.Add(1)
-		go func(idx int, ip string) {
-			defer wg.Done()
-			s := scan.NewScan(ip, &tasks.PortPool, *timeout)
-			portList := s.GetAllTcpOpenPorts()
-			if len(*portList) != 0 {
-				results[idx] = fmt.Sprintf("IP:%s Port:%v", ip, *portList)
-				// fmt.Printf("IP:%s Port:%v\n", ip, *portList)
-			}
-		}(k, v)
+	fmt.Println("golire is running, now detecting host...")
+	tasks, err := golire.NewTasks(*ips, *ports)
+	if err != nil {
+		fmt.Println("Err: " + err.Error())
+		os.Exit(1)
 	}
-	wg.Wait()
-	for _, v := range results {
-		if v != "" {
-			fmt.Println(v)
-		}
+	fmt.Println("Surviving host: ")
+	for _, v := range tasks.IPPool {
+		fmt.Println(v)
 	}
+	fmt.Println("Detection complete, now scanning TCP ports...")
+	tasks.Run(time.Duration(*timeout)*time.Millisecond, *number)
 }
