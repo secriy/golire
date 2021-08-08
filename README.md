@@ -28,6 +28,15 @@ golire.exe 172.16.12.0/24 -n 100 -p 22-80,8080
 golire.exe 172.16.12.0/24 -n 1000 -p 22,80 -t 300
 ```
 
+### Example
+
+```shell
+golire.exe 172.16.12.0/24 -n 1000 -p 22
+golire.exe 172.16.12.1/31
+golire.exe 172.16.12.0/24 -n 100 -p 22-80,8080
+golire.exe 172.16.12.0/24 -n 1000 -p 22,80 -t 300
+```
+
 ## Module
 
 - Arguments handler
