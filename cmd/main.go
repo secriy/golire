@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ips     = flag.String("h", "127.0.0.1/24", "Host, which represent by CIDR, like '192.168.1.0/24'")
+	ips     = flag.String("c", "127.0.0.1/24", "Host, which represent by CIDR, like '192.168.1.0/24'")
 	ports   = flag.String("p", "22,3389", "Port range, like '1-28', '22,53,3389' and '22,49-80'.")
 	timeout = flag.Int("t", 200, "Timeout for one scan task, the default is 200 milliseconds.")
 	number  = flag.Int("n", 300, "The number of goroutines to be created.")
