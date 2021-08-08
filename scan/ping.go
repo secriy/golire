@@ -23,10 +23,9 @@ const (
 	MaxPg = 2000
 )
 
-func PingToScan() {
-	if _, ok := Ping("172.22.22.111", 48, 3); ok {
-		log.Println("YES")
-	}
+func MustPing(host string) bool {
+	_, ok := Ping(host, 48, 3)
+	return ok
 }
 
 // Ping implements ping command by ICMP
