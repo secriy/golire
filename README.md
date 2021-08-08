@@ -16,7 +16,6 @@ Usage of golire:
         Port range, such as '1-28', '22,53,3389' and '22,49-80'. (default "22,3389")
   -t int
         Timeout for one scan task, the default is 200 milliseconds. (default 200)
-
 ```
 
 ### Example
