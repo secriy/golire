@@ -2,6 +2,11 @@
 
 一个快速局域网扫描器，支持CIDR格式指定IP地址范围，使用指定数量的 Goroutine 并发处理大量任务。
 
+![GitHub branch checks state](https://img.shields.io/github/checks-status/secriy/golire/master)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/secriy/golire)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/secriy/golire)
+![GitHub](https://img.shields.io/github/license/secriy/golire)
+
 ## Usage
 
 ```shell
