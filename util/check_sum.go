@@ -1,4 +1,4 @@
-package utils
+package util
 
 // CheckSum return checksum of the data
 func CheckSum(data []byte) (rt uint16) {

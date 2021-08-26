@@ -8,50 +8,39 @@
 $ make build
 $ golire.exe -h
 ```
-```
-Usage of golire:
-  golire [HOST] [OPTIONS], HOST is in CIDR format, such as '192.168.1.0/24'
 
-  -n int
-        The number of goroutines to be created. (default 300)
-  -p string
-        Port range, such as '1-28', '22,53,3389' and '22,49-80'. (default "22,3389")
-  -t int
-        Timeout for one scan task, the default is 200 milliseconds. (default 200)
+```
+┌─┐┌─┐┬  ┬┬─┐┌─┐
+│ ┬│ ││  │├┬┘├┤
+└─┘└─┘┴─┘┴┴└─└─┘
+
+Author: Secriy
+GitHub: https://github.com/secriy/golire
+
+Usage:
+  golire [Command] [flags]
+  golire [command]
+
+Available Commands:
+  completion  generate the autocompletion script for the specified shell
+  help        Help about any command
+  ping        Find all surviving hosts using ICMP message.
+
+Flags:
+  -h, --help           help for golire
+  -l, --level string   logger level, debug, info, warning, error and fatal
+  -v, --version        version for golire
+
+Use "golire [command] --help" for more information about a command.
 ```
 
-### Example
+## Example
+
+### Ping
 
 ```shell
-golire.exe 172.16.12.0/24 -n 1000 -p 22
-golire.exe 172.16.12.1/31
-golire.exe 172.16.12.0/24 -n 100 -p 22-80,8080
-golire.exe 172.16.12.0/24 -n 1000 -p 22,80 -t 300
-```
-
-## Module
-
-- Arguments handler
-- CIDR and port parser
-- Ping to host
-- TCP port scanner
-
-## Directory
-
-```
-.
-│   task.go
-│
-├───cmd
-│       main.go
-│
-├───scan
-│       ping.go
-│       ping_test.go
-│       scan.go
-│       scan_test.go
-│
-└───utils
-        array.go
-        check_sum.go
+.\golire.exe ping 192.168.1.1/31
+.\golire.exe ping 192.168.1.0/24
+.\golire.exe ping 192.168.1.0/24 -l "debug"
+.\golire.exe ping -l "info" 192.168.1.0/24
 ```
