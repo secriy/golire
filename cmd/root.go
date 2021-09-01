@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 Author: Secriy
 GitHub: https://github.com/secriy/golire
 `,
-	Version: "0.2",
+	Version: "v0.2",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(cmd.Long)
 	},
