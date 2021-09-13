@@ -11,14 +11,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var gors int // the number of goroutines
+var pingGors int // the number of goroutines
 
 // pingCmd represents the ping command
 var pingCmd = &cobra.Command{
 	Use:   "ping [Host]",
 	Short: "Find all surviving hosts using ICMP message.",
-	Long: `Host specific as a CIDR notation,
-like 192.168.0.0/24, 192.168.1.1/31.
+	Long: `Host specific as a CIDR notation or an IP address,
+like 192.168.0.0/24, 192.168.1.1/31, 192.168.1.11.
 `,
 	Args: cobra.RangeArgs(1, 1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -28,12 +28,12 @@ like 192.168.0.0/24, 192.168.1.1/31.
 		ips := util.ParseHost(args[0])
 
 		// limit goroutine numbers
-		if gors > len(ips) {
-			gors = len(ips)
+		if pingGors > len(ips) {
+			pingGors = len(ips)
 		}
 
 		wg := &sync.WaitGroup{}
-		p, _ := ants.NewPoolWithFunc(gors, func(i interface{}) {
+		p, _ := ants.NewPoolWithFunc(pingGors, func(i interface{}) {
 			ip := i.(string)
 			if module.PingDefault(ip) {
 				util.Print("PING", "Found a alive host: "+ip)
@@ -57,5 +57,5 @@ like 192.168.0.0/24, 192.168.1.1/31.
 func init() {
 	rootCmd.AddCommand(pingCmd)
 
-	pingCmd.Flags().IntVarP(&gors, "threads", "t", 500, "-t [Number]")
+	pingCmd.Flags().IntVarP(&pingGors, "threads", "p", 500, "-p [Number]")
 }

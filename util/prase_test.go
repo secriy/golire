@@ -21,13 +21,31 @@ func TestParsePort(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ParsePort(tt.args.port)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ParsePort() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := ParsePort(tt.args.port)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ParsePort() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestParseHost(t *testing.T) {
+	type args struct {
+		s string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []string
+		wantErr bool
+	}{
+		{"test1", args{s: "172.22.22.0/30"}, []string{"172.22.22.1", "172.22.22.2"}, false},
+		{"single", args{s: "172.22.22.2"}, []string{"172.22.22.2"}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ParseHost(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ParseHost() = %v, want %v", got, tt.want)
 			}
 		})
 	}
