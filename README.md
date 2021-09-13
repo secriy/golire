@@ -25,6 +25,7 @@ Available Commands:
   completion  generate the autocompletion script for the specified shell
   help        Help about any command
   ping        Find all surviving hosts using ICMP message.
+  port        Scan all opened TCP or UDP ports.
 
 Flags:
   -h, --help           help for golire
@@ -43,4 +44,11 @@ Use "golire [command] --help" for more information about a command.
 .\golire.exe ping 192.168.1.0/24
 .\golire.exe ping 192.168.1.0/24 -l "debug"
 .\golire.exe ping -l "info" 192.168.1.0/24
+```
+
+### PortScan
+
+```shell
+.\golire.exe port 192.168.1.1 -p 22,3389,8080,8081-8090
+.\golire.exe port 192.168.1.1 -p 1-225 -t 5000
 ```
