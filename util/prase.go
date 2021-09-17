@@ -11,6 +11,9 @@ import (
 // ParseHost parses s as a CIDR notation IP address and prefix length,
 // return a string slice of IP address.
 func ParseHost(s string) []string {
+	if ip := net.ParseIP(s); ip != nil {
+		return []string{ip.String()}
+	}
 	res := make([]string, 0)
 	ip, ipNet, err := net.ParseCIDR(s)
 	if err != nil {
@@ -19,11 +22,17 @@ func ParseHost(s string) []string {
 	for ip := ip.Mask(ipNet.Mask); ipNet.Contains(ip); incr(ip) {
 		res = append(res, ip.String())
 	}
-	return res
+	lenIPs := len(res)
+	switch {
+	case lenIPs < 2:
+		return res
+	default:
+		return res[1 : len(res)-1]
+	}
 }
 
 // ParsePort parses s to a string slice of ports.
-func ParsePort(s string) ([]uint16, error) {
+func ParsePort(s string) []uint16 {
 	res := make([]uint16, 0)
 	ports := strings.Split(strings.Trim(s, ", "), ",")
 	for _, v := range ports {
@@ -49,7 +58,7 @@ func ParsePort(s string) ([]uint16, error) {
 	sort.Slice(res, func(i, j int) bool {
 		return i < j
 	})
-	return res, nil
+	return res
 }
 
 // portToUint16 return the int value of port string.

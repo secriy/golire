@@ -37,21 +37,26 @@ func Ping(domain string, PS, count int) (live bool) {
 	)
 	conn, err := net.DialIP("ip4:icmp", &laddr, raddr)
 	if err != nil {
-		util.Debug("ping " + domain + " failed: " + err.Error())
+		pingFailed(domain, err)
 		return
 	}
 	defer conn.Close()
+
+	if err := conn.SetDeadline(time.Now().Add(time.Duration(1000))); err != nil {
+		pingFailed(domain, err)
+		return false
+	}
 
 	buf := new(bytes.Buffer)
 	// write binary data to buffer
 	err = binary.Write(buf, binary.BigEndian, icmp)
 	if err != nil {
-		util.Debug("ping " + domain + " failed: " + err.Error())
+		pingFailed(domain, err)
 		return
 	}
 	err = binary.Write(buf, binary.BigEndian, originBytes[0:PS])
 	if err != nil {
-		util.Debug("ping " + domain + " failed: " + err.Error())
+		pingFailed(domain, err)
 		return
 	}
 	b := buf.Bytes()
@@ -63,22 +68,27 @@ func Ping(domain string, PS, count int) (live bool) {
 	// otherwise return false.
 	for ; count > 0; count-- {
 		if _, err := conn.Write(buf.Bytes()); err != nil {
-			util.Debug("ping " + domain + " failed: " + err.Error())
+			pingFailed(domain, err)
 			time.Sleep(time.Second)
 			continue
 		}
-		err = conn.SetReadDeadline(time.Now().Add(time.Second * 1))
+		err = conn.SetReadDeadline(time.Now().Add(time.Millisecond * 100))
 		if err != nil {
-			util.Debug("ping " + domain + " failed: " + err.Error())
+			pingFailed(domain, err)
 			return
 		}
 		_, err = conn.Read(rev)
 		if err != nil {
-			util.Debug("ping " + domain + " failed: " + err.Error())
+			pingFailed(domain, err)
 			time.Sleep(time.Second)
 			continue
 		}
 		return true
 	}
 	return
+}
+
+// debug message
+func pingFailed(domain string, err error) {
+	util.Debug("ping " + domain + " failed: " + err.Error())
 }
