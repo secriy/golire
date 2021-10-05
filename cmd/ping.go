@@ -25,7 +25,7 @@ like 192.168.0.0/24, 192.168.1.1/31, 192.168.1.11.
 		module.Log(level) // set logger level
 		var count int64   // count the alive host
 
-		ips := util.ParseHost(args[0])
+		ips := module.ParseHost(args[0])
 
 		// limit goroutine numbers
 		if pingGors > len(ips) {

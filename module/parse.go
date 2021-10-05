@@ -1,4 +1,4 @@
-package util
+package module
 
 import (
 	"errors"
@@ -6,18 +6,34 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/secriy/golire/util"
 )
+
+// ParseDomain resolve domain name to IPv4 address
+func ParseDomain(domainName string) net.IP {
+	addr, err := net.ResolveIPAddr("ip4", domainName)
+	if err != nil {
+		return nil
+	}
+	return addr.IP
+}
 
 // ParseHost parses s as a CIDR notation IP address and prefix length,
 // return a string slice of IP address.
 func ParseHost(s string) []string {
 	if ip := net.ParseIP(s); ip != nil {
+		// single IP address
+		return []string{ip.String()}
+	} else if ip = ParseDomain(s); ip != nil {
+		// domain name
+		util.Print("IP", ip.String()) // output ip address
 		return []string{ip.String()}
 	}
 	res := make([]string, 0)
 	ip, ipNet, err := net.ParseCIDR(s)
 	if err != nil {
-		Fatal(s + " is not in correct CIDR format")
+		util.Fatal(s + " is not in correct CIDR format")
 	}
 	for ip := ip.Mask(ipNet.Mask); ipNet.Contains(ip); incr(ip) {
 		res = append(res, ip.String())
@@ -40,12 +56,12 @@ func ParsePort(s string) []uint16 {
 		multiPorts := strings.Split(strings.Trim(v, "-"), "-")
 		start, err := portToUint16(multiPorts[0])
 		if err != nil {
-			Fatal(s + " is an incorrect port format string")
+			util.Fatal(s + " is an incorrect port format string")
 		}
 		if len(multiPorts) > 1 {
 			end, err := portToUint16(multiPorts[1])
 			if err != nil {
-				Fatal(s + " is an incorrect port format string")
+				util.Fatal(s + " is an incorrect port format string")
 			}
 			for ; start != 0 && start <= end; start++ {
 				res = append(res, start)

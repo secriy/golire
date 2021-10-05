@@ -25,8 +25,8 @@ var portCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		module.Log(level) // set logger level
 
-		ips := util.ParseHost(args[0])
-		ports := util.ParsePort(portPool)
+		ips := module.ParseHost(args[0])
+		ports := module.ParsePort(portPool)
 
 		// limit goroutine numbers
 		if portGors > len(ports) {
