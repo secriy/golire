@@ -1,4 +1,4 @@
-package module
+package core
 
 import "github.com/secriy/golire/util"
 

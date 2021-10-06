@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/panjf2000/ants/v2"
-	"github.com/secriy/golire/module"
+	"github.com/secriy/golire/core"
 	"github.com/secriy/golire/util"
 	"github.com/spf13/cobra"
 )
@@ -23,10 +23,10 @@ var portCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.RangeArgs(1, 1),
 	Run: func(cmd *cobra.Command, args []string) {
-		module.Log(level) // set logger level
+		core.Log(level) // set logger level
 
-		ips := module.ParseHost(args[0])
-		ports := module.ParsePort(portPool)
+		ips := core.ParseHost(args[0])
+		ports := core.ParsePort(portPool)
 
 		// limit goroutine numbers
 		if portGors > len(ports) {
@@ -36,7 +36,7 @@ var portCmd = &cobra.Command{
 		wg := &sync.WaitGroup{}
 
 		p, _ := ants.NewPoolWithFunc(portGors, func(i interface{}) {
-			if module.DetectTCP(i.(string), time.Duration(timeout)*time.Millisecond) {
+			if core.DetectTCP(i.(string), time.Duration(timeout)*time.Millisecond) {
 				util.Print("TCP", "Found open port: "+strings.Split(i.(string), ":")[1])
 			}
 			wg.Done()

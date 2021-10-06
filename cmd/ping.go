@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 
 	"github.com/panjf2000/ants/v2"
-	"github.com/secriy/golire/module"
+	"github.com/secriy/golire/core"
 	"github.com/secriy/golire/util"
 	"github.com/spf13/cobra"
 )
@@ -22,10 +22,10 @@ like 192.168.0.0/24, 192.168.1.1/31, 192.168.1.11.
 `,
 	Args: cobra.RangeArgs(1, 1),
 	Run: func(cmd *cobra.Command, args []string) {
-		module.Log(level) // set logger level
-		var count int64   // count the alive host
+		core.Log(level) // set logger level
+		var count int64 // count the alive host
 
-		ips := module.ParseHost(args[0])
+		ips := core.ParseHost(args[0])
 
 		// limit goroutine numbers
 		if pingGors > len(ips) {
@@ -35,7 +35,7 @@ like 192.168.0.0/24, 192.168.1.1/31, 192.168.1.11.
 		wg := &sync.WaitGroup{}
 		p, _ := ants.NewPoolWithFunc(pingGors, func(i interface{}) {
 			ip := i.(string)
-			if module.PingDefault(ip) {
+			if core.PingDefault(ip) {
 				util.Print("PING", "Found a alive host: "+ip)
 				atomic.AddInt64(&count, 1)
 			}
