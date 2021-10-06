@@ -16,7 +16,11 @@ const (
 	LevelDebug
 )
 
-var level LogLevel = 1
+var (
+	level LogLevel = 1
+
+	file *os.File
+)
 
 func Level() LogLevel {
 	return level
@@ -24,6 +28,12 @@ func Level() LogLevel {
 
 func SetLevel(ll LogLevel) {
 	level = ll
+
+	var err error
+	file, err = os.Create(fmt.Sprintf("golire_%s.log", time.Now().Format("20060102-15-04-05")))
+	if err != nil {
+		Fatal(err.Error())
+	}
 }
 
 func SetLevelString(ll string) {
@@ -43,8 +53,17 @@ func SetLevelString(ll string) {
 	}
 }
 
+// writeLogFile write log text to file
+func writeLogFile(text string) {
+	if _, err := file.WriteString(text); err != nil {
+		Error(err.Error())
+	}
+}
+
 func logPrint(ll LogLevel, text string) {
 	if ll == -1 || ll <= level {
+		writeLogFile(text + "\n")
+
 		fmt.Println(text)
 	}
 }
